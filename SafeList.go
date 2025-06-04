@@ -45,3 +45,16 @@ func (s *SafeList[K, V]) Remove(key K) {
 
 	s.data[key] = nil
 }
+
+func (s *SafeList[K, V]) Items() map[K]*V {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	copy := make(map[K]*V, len(s.data))
+
+	for k, v := range s.data {
+		copy[k] = v
+	}
+
+	return copy
+}
