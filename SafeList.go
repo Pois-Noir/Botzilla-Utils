@@ -10,6 +10,12 @@ type SafeList[T any] struct {
 	data map[string]*T
 }
 
+func NewSafeList[T any]() *SafeList[T] {
+	return &SafeList[T]{
+		data: make(map[string]*T),
+	}
+}
+
 func (s *SafeList[T]) Get(name string) *T {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
