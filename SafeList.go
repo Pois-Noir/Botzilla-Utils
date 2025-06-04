@@ -47,7 +47,7 @@ func (s *SafeList[K, V]) Remove(key K) {
 	s.data[key] = nil
 }
 
-func (s *SafeList[K, V]) Items() map[K]*V {
+func (s *SafeList[K, V]) Data() map[K]*V {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
@@ -56,4 +56,14 @@ func (s *SafeList[K, V]) Items() map[K]*V {
 	maps.Copy(copy, s.data)
 
 	return copy
+}
+
+func (s *SafeList[K, V]) ForEach(f func(K, *V)) {
+
+	// Copy of original data
+	data := s.Data()
+
+	for key, val := range data {
+		f(key, val)
+	}
 }
