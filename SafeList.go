@@ -5,41 +5,41 @@ import (
 	"sync"
 )
 
-type SafeList[T any] struct {
+type SafeList[K comparable, V any] struct {
 	mu   sync.RWMutex
-	data map[string]*T
+	data map[K]*V
 }
 
-func NewSafeList[T any]() *SafeList[T] {
-	return &SafeList[T]{
-		data: make(map[string]*T),
+func NewSafeList[K comparable, V any]() *SafeList[K, V] {
+	return &SafeList[K, V]{
+		data: make(map[K]*V),
 	}
 }
 
-func (s *SafeList[T]) Get(name string) *T {
+func (s *SafeList[K, V]) Get(key K) *V {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
-	result := s.data[name]
+	result := s.data[key]
 
 	return result
 }
 
-func (s *SafeList[T]) Add(key string, obj *T) error {
+func (s *SafeList[K, V]) Add(key K, value *V) error {
 
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
 	search := s.data[key]
 	if search != nil {
-		return errors.New(key + " already exists")
+		return errors.New("key already exists")
 	}
 
-	s.data[key] = obj
+	s.data[key] = value
 
 	return nil
 }
 
-func (s *SafeList[T]) Remove(key string) {
+func (s *SafeList[K, V]) Remove(key K) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
