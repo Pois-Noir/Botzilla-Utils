@@ -2,6 +2,7 @@ package Ren
 
 import (
 	"errors"
+	"maps"
 	"sync"
 )
 
@@ -52,9 +53,7 @@ func (s *SafeList[K, V]) Items() map[K]*V {
 
 	copy := make(map[K]*V, len(s.data))
 
-	for k, v := range s.data {
-		copy[k] = v
-	}
+	maps.Copy(copy, s.data)
 
 	return copy
 }
