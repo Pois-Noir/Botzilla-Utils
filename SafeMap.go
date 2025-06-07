@@ -17,7 +17,7 @@ func NewSafeMap[K comparable, V any]() *SafeMap[K, V] {
 	}
 }
 
-func (s *NewSafeMap[K, V]) Get(key K) *V {
+func (s *SafeMap[K, V]) Get(key K) *V {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 	result := s.data[key]
