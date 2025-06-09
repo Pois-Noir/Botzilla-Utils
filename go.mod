@@ -1,3 +1,3 @@
-module github.com/Pois-Noir/Ren
+module github.com/Pois-Noir/Botzilla-Utils
 
 go 1.24.3
