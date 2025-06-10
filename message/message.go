@@ -1,12 +1,33 @@
 package message
 
 import (
+	"bytes"
+
 	header_package "github.com/Pois-Noir/Botzilla-Utils/header"
+	encoder_package "github.com/Pois-Noir/Mammad/encoder"
 )
 
 type Message struct { // Message holds header and payload
 	Header  header_package.Header
 	Payload map[string]interface{}
+}
+
+func (m *Message) Encode() ([]byte, error) {
+	var messageBytes bytes.Buffer
+
+	headerBytes, err := m.Header.Encode()
+	if err != nil {
+		return nil, err
+	}
+	messageBytes.Write(headerBytes)
+
+	payloadBytes, err := encoder_package.NewEncoder().EncodeMap(m.Payload)
+	if err != nil {
+		return nil, err
+	}
+	messageBytes.Write(payloadBytes)
+
+	return messageBytes.Bytes(), nil
 }
 
 /*
