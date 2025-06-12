@@ -12,19 +12,39 @@ type Message struct { // Message holds header and payload
 	Payload map[string]interface{}
 }
 
+func NewMessage(statusCode uint8, message map[string]interface{}) *Message {
+	return &Message{
+		Header: header_package.Header{
+			Status: statusCode,
+		},
+		Payload: message,
+	}
+}
+
+func (m *Message) SetStatusCode(statusCode uint8) {
+	m.Header.Status = statusCode
+}
+
 func (m *Message) Encode() ([]byte, error) {
 	var messageBytes bytes.Buffer
 
-	headerBytes, err := m.Header.Encode()
-	if err != nil {
-		return nil, err
-	}
-	messageBytes.Write(headerBytes)
+	// headerBytes, err := m.Header.Encode()
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// messageBytes.Write(headerBytes)
 
 	payloadBytes, err := encoder_package.NewEncoder().EncodeMap(m.Payload)
 	if err != nil {
 		return nil, err
 	}
+
+	m.Header.Length = uint32(len(payloadBytes))
+	headerBytes, err := m.Header.Encode()
+	if err != nil {
+		return nil, err
+	}
+	messageBytes.Write(headerBytes)
 	messageBytes.Write(payloadBytes)
 
 	return messageBytes.Bytes(), nil
