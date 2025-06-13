@@ -3,7 +3,14 @@ package header
 import (
 	"bytes"
 	"encoding/binary"
+	"io"
+	"net"
 )
+
+const STATUDBYTEINDEX = 0
+const OPERATIONCODEBYTEINDEX = 1
+const MESSAGELENGTHBYTEINDEXSTART = 2
+const MESSAGEBYTECOUNT = 4
 
 // pipe & filter style (dont care where its coming from and where it is going)
 // Header is the 5-byte prefix
@@ -48,4 +55,19 @@ func (h *Header) Encode() ([]byte, error) {
 
 	return buf.Bytes(), nil
 
+}
+
+func DecodeHeader(conn net.Conn) (*Header, error) {
+
+	var headerBytes [6]byte
+
+	_, err := io.ReadFull(conn, headerBytes[:])
+	if err != nil {
+		// handle error, e.g., log or return
+		return nil, err
+	}
+
+	header := NewHeader(uint8(headerBytes[STATUDBYTEINDEX]), uint8(headerBytes[OPERATIONCODEBYTEINDEX]))
+	header.SetMessageLength(binary.BigEndian.Uint32(headerBytes[MESSAGELENGTHBYTEINDEXSTART : MESSAGELENGTHBYTEINDEXSTART+MESSAGEBYTECOUNT]))
+	return header, nil
 }
