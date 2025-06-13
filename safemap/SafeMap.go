@@ -1,4 +1,4 @@
-package Ren
+package safemap
 
 import (
 	"errors"
