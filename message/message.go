@@ -12,17 +12,23 @@ type Message struct { // Message holds header and payload
 	Payload map[string]interface{}
 }
 
-func NewMessage(statusCode uint8, message map[string]interface{}) *Message {
+func NewMessage(statusCode uint8, operationCode uint8, message map[string]interface{}) *Message {
 	return &Message{
-		Header: header_package.Header{
-			Status: statusCode,
-		},
+		Header:  *header_package.NewHeader(statusCode, operationCode),
 		Payload: message,
 	}
 }
 
+func NewEmptyMessage() *Message {
+	return &Message{}
+}
+
 func (m *Message) SetStatusCode(statusCode uint8) {
 	m.Header.Status = statusCode
+}
+
+func (m *Message) SetOperationCode(operationCode uint8) {
+	m.Header.OperationCode = operationCode
 }
 
 func (m *Message) Encode() ([]byte, error) {
@@ -39,7 +45,7 @@ func (m *Message) Encode() ([]byte, error) {
 		return nil, err
 	}
 
-	m.Header.Length = uint32(len(payloadBytes))
+	m.Header.SetMessageLength(uint32(len(payloadBytes)))
 	headerBytes, err := m.Header.Encode()
 	if err != nil {
 		return nil, err
