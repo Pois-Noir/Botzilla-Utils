@@ -17,7 +17,7 @@ const MESSAGEBYTECOUNT = 4
 type Header struct {
 	Status        uint8  //1 byte status code uint8
 	OperationCode uint8  // 1 byte OperationCode
-	length        uint32 //4 bytes payload length int
+	Length        uint32 //4 bytes payload length int
 }
 
 func NewEmptyHeader() *Header {
@@ -32,7 +32,7 @@ func NewHeader(status uint8, operationCode uint8) *Header {
 }
 
 func (h *Header) SetMessageLength(messageLen uint32) {
-	h.length = messageLen
+	h.Length = messageLen
 }
 
 func (h *Header) Encode() ([]byte, error) {
@@ -48,7 +48,7 @@ func (h *Header) Encode() ([]byte, error) {
 		return nil, err
 	}
 
-	err = binary.Write(&buf, binary.BigEndian, h.length)
+	err = binary.Write(&buf, binary.BigEndian, h.Length)
 	if err != nil {
 		return nil, err
 	}
