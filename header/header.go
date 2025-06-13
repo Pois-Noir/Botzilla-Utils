@@ -1,6 +1,7 @@
 package header
 
 import (
+	"bufio"
 	"bytes"
 	"encoding/binary"
 	"io"
@@ -62,6 +63,20 @@ func DecodeHeader(conn net.Conn) (*Header, error) {
 	var headerBytes [6]byte
 
 	_, err := io.ReadFull(conn, headerBytes[:])
+	if err != nil {
+		// handle error, e.g., log or return
+		return nil, err
+	}
+
+	header := NewHeader(uint8(headerBytes[STATUDBYTEINDEX]), uint8(headerBytes[OPERATIONCODEBYTEINDEX]))
+	header.SetMessageLength(binary.BigEndian.Uint32(headerBytes[MESSAGELENGTHBYTEINDEXSTART : MESSAGELENGTHBYTEINDEXSTART+MESSAGEBYTECOUNT]))
+	return header, nil
+}
+
+func DecodeHeaderBuffered(bReader *bufio.Reader) (*Header, error) {
+	var headerBytes [6]byte
+
+	_, err := io.ReadFull(bReader, headerBytes[:])
 	if err != nil {
 		// handle error, e.g., log or return
 		return nil, err
