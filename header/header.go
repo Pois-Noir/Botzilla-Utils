@@ -30,7 +30,7 @@ func (h *Header) Encode() []byte {
 	buf[global_configs.STATUS_CODE_INDEX] = h.Status
 	buf[global_configs.OPERATION_CODE_INDEX] = h.OperationCode
 
-	binary.BigEndian.PutUint32(buf[global_configs.MESSAGE_LENGTH_INDEX:], h.Length)
+	binary.BigEndian.PutUint32(buf[global_configs.MESSAGE_LENGTH_INDEX:], h.PayloadLength)
 
 	return buf[:]
 
