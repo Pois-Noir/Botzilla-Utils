@@ -1,60 +1,67 @@
 package message
 
 import (
-	"bytes"
-
-	header_package "github.com/Pois-Noir/Botzilla-Utils/header"
-	encoder_package "github.com/Pois-Noir/Mammad/encoder"
+	header "github.com/Pois-Noir/Botzilla-Utils/header"
 )
 
 type Message struct { // Message holds header and payload
-	Header  header_package.Header
+	Header  header.Header
 	Payload map[string]interface{}
 }
 
-func NewMessage(statusCode uint8, operationCode uint8, message map[string]interface{}) *Message {
-	return &Message{
-		Header:  *header_package.NewHeader(statusCode, operationCode),
-		Payload: message,
-	}
-}
+// func NewMessage(statusCode uint8, operationCode uint8, message map[string]interface{}) *Message {
+// 	return &Message{
+// 		Header:  *header.NewHeader(statusCode, operationCode),
+// 		Payload: message,
+// 	}
+// }
 
-func NewEmptyMessage() *Message {
-	return &Message{}
-}
+// func NewUserMessage(message map[string]string) *Message {
 
-func (m *Message) SetStatusCode(statusCode uint8) {
-	m.Header.Status = statusCode
-}
+// 	message := &Message{}
 
-func (m *Message) SetOperationCode(operationCode uint8) {
-	m.Header.OperationCode = operationCode
-}
+// 	message.header = header.NewHeader(global_configs.OK_STATUS, global_configs.USER_MESSAGE_OPERATION_CODE)
 
-func (m *Message) Encode() ([]byte, error) {
-	var messageBytes bytes.Buffer
+// }
 
-	// headerBytes, err := m.Header.Encode()
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// messageBytes.Write(headerBytes)
+// func NewEmptyMessage() *Message {
+// 	return &Message{}
+// }
 
-	payloadBytes, err := encoder_package.NewEncoder().EncodeMap(m.Payload)
-	if err != nil {
-		return nil, err
-	}
+// func (m *Message) SetStatusCode(statusCode uint8) {
+// 	m.Header.Status = statusCode
+// }
 
-	m.Header.SetMessageLength(uint32(len(payloadBytes)))
-	headerBytes, err := m.Header.Encode()
-	if err != nil {
-		return nil, err
-	}
-	messageBytes.Write(headerBytes)
-	messageBytes.Write(payloadBytes)
+// func (m *Message) SetOperationCode(operationCode uint8) {
+// 	m.Header.OperationCode = operationCode
+// }
 
-	return messageBytes.Bytes(), nil
-}
+// TODO
+// Amir Look at this
+// func (m *Message) Encode() ([]byte, error) {
+// 	var messageBytes bytes.Buffer
+
+// 	// headerBytes, err := m.Header.Encode()
+// 	// if err != nil {
+// 	// 	return nil, err
+// 	// }
+// 	// messageBytes.Write(headerBytes)
+
+// 	payloadBytes, err := encoder_package.NewEncoder().EncodeMap(m.Payload)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+
+// 	m.Header.Length = uint32(len(payloadBytes))
+// 	headerBytes, err := m.Header.Encode()
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	messageBytes.Write(headerBytes)
+// 	messageBytes.Write(payloadBytes)
+
+// 	return messageBytes.Bytes(), nil
+// }
 
 /*
 
