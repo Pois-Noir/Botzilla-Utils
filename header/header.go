@@ -1,7 +1,6 @@
 package header
 
 import (
-	"bytes"
 	"encoding/binary"
 	"errors"
 
@@ -32,25 +31,16 @@ func NewHeader(status uint8, operationCode uint8, len uint32) *Header {
 // 	h.Length = messageLen
 // }
 
-func (h *Header) Encode() ([]byte, error) {
-	var buf bytes.Buffer
+func (h *Header) Encode() []byte {
 
-	err := buf.WriteByte(h.Status)
-	if err != nil {
-		return nil, err
-	}
+	buf := [global_configs.HEADER_LENGTH]byte{}
 
-	err = buf.WriteByte(h.OperationCode)
-	if err != nil {
-		return nil, err
-	}
+	buf[global_configs.STATUS_CODE_INDEX] = h.Status
+	buf[global_configs.OPERATION_CODE_INDEX] = h.OperationCode
 
-	err = binary.Write(&buf, binary.BigEndian, h.Length)
-	if err != nil {
-		return nil, err
-	}
+	binary.BigEndian.PutUint32(buf[global_configs.MESSAGE_LENGTH_INDEX:], h.Length)
 
-	return buf.Bytes(), nil
+	return buf[:]
 
 }
 
