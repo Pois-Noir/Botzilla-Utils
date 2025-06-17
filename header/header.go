@@ -44,8 +44,8 @@ func Decode(buffer []byte) (*Header, error) {
 
 	header := &Header{}
 
-	header.OperationCode = uint8(buffer[global_configs.STATUS_CODE_INDEX])
-	header.Status = uint8(buffer[global_configs.OPERATION_CODE_INDEX])
+	header.OperationCode = uint8(buffer[global_configs.OPERATION_CODE_INDEX])
+	header.Status = uint8(buffer[global_configs.STATUS_CODE_INDEX])
 	header.PayloadLength = binary.BigEndian.Uint32(buffer[global_configs.MESSAGE_LENGTH_INDEX:global_configs.HEADER_LENGTH])
 
 	return header, nil
