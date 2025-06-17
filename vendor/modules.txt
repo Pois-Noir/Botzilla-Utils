@@ -1,4 +1,0 @@
-# github.com/Pois-Noir/Mammad v0.0.0-20250610000811-9bd7409e9ccf
-## explicit; go 1.24.0
-github.com/Pois-Noir/Mammad/encoder
-github.com/Pois-Noir/Mammad/errors
